@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+
+   <groupId>org.example</groupId>
+   <artifactId>maven-import-test</artifactId>
+   <packaging>pom</packaging>
+   <version>1.0-SNAPSHOT</version>
+
+   <properties>
+      <version.java>8</version.java>
+   </properties>
+
+   <build>
+      <pluginManagement>
+         <plugins>
+            <plugin>
+               <artifactId>maven-compiler-plugin</artifactId>
+               <configuration>
+                  <release>${version.java}</release>
+                  <source>${version.java}</source>
+                  <target>${version.java}</target>
+               </configuration>
+            </plugin>
+         </plugins>
+      </pluginManagement>
+   </build>
+   <profiles>
+      <!-- This profile should be activated when Java 9 or later is used to test a project that supports Java 8 -->
+      <profile>
+         <id>java8-test</id>
+         <activation>
+            <jdk>[9,)</jdk>
+            <property>
+               <name>java8.home</name>
+            </property>
+            <file>
+               <exists>${basedir}/build-test-java8</exists>
+            </file>
+         </activation>
+         <dependencies>
+            <dependency>
+               <groupId>com.sun</groupId>
+               <artifactId>tools</artifactId>
+               <version>${version.java}</version>
+               <scope>system</scope>
+               <systemPath>${env.JAVA8_HOME}/lib/tools.jar</systemPath>
+            </dependency>
+         </dependencies>
+      </profile>
+      <!-- This profile should be activated when Java 9 or later is used to build -->
+      <profile>
+         <id>java9-mr-build</id>
+         <activation>
+            <jdk>[9,)</jdk>
+            <file>
+               <exists>${basedir}/src/main/java9</exists>
+            </file>
+         </activation>
+         <dependencies>
+            <dependency>
+               <groupId>com.sun</groupId>
+               <artifactId>tools</artifactId>
+               <version>${version.java}</version>
+               <scope>system</scope>
+               <systemPath>${env.JAVA8_HOME}/lib/tools.jar</systemPath>
+            </dependency>
+         </dependencies>
+      </profile>
+   </profiles>
+</project>
